@@ -11,6 +11,7 @@ namespace ImageFileSizeConsole
 {
     internal class Program
     {
+        public static HashSet<string> usedFlags = new HashSet<string>();
         static void Main(string[] args)
         {
             if (args.Length == 0)
@@ -24,6 +25,7 @@ namespace ImageFileSizeConsole
             DateTime? lastFileDate = null;
             int maxWidth = 0;
 
+            
             int flagCount = 0;
 
             for (int i = 0; i < args.Length; i++)
@@ -32,11 +34,15 @@ namespace ImageFileSizeConsole
                 switch (curr)
                 {
                     case "-p":
+                        if (checkFlags(curr)) { return; }
+                        usedFlags.Add(curr);
                         folderPath = args[i + 1];
                         flagCount++;
                         i++;
                         break;
                     case "-d":
+                        if (checkFlags(curr)) { return; }
+                        usedFlags.Add(curr);
                         if (args[i + 1].Contains('/'))
                         {
                             lastFileDate = Convert.ToDateTime(args[i + 1]);
@@ -49,6 +55,8 @@ namespace ImageFileSizeConsole
                         i++;
                         break;
                     case "-m":
+                        if (checkFlags(curr)) { return; }
+                        usedFlags.Add(curr);
                         maxWidth = Convert.ToInt32(args[i + 1]);
                         i++;
                         break;
@@ -92,15 +100,22 @@ namespace ImageFileSizeConsole
                         }
                     } catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message);
+                        // skip
                     }
 
                 }
-            }
-
-
-
-            
+            }  
         }
+
+        static bool checkFlags(string flag)
+        {
+            if (usedFlags.Contains(flag))
+            {
+                Console.WriteLine("Cannot use flag multiple times");
+                return true;
+            }
+            return false;
+        }
+
     }
 }
