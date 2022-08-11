@@ -79,6 +79,7 @@ namespace ImageFileSizeConsole
                 {
                     try
                     {
+                        // turn path into bitmap, if fails skips
                         Bitmap src = new Bitmap(file);
                         Bitmap target = new Bitmap(src.Width, src.Height);
                         Graphics g = Graphics.FromImage(target);
